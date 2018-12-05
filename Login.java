@@ -1,4 +1,4 @@
-package test;
+package test;;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class Login {
                 while (true) {          	
                     String input = in.readLine().toString(); // we read sentences from text box
                     datas = input.split("/");
-                    if(datas[0].equalsIgnoreCase("login"))//·Î±×ÀÎ
+                    if(datas[0].equalsIgnoreCase("login"))//ë¡œê·¸ì¸
                     {
                        try {
                     	   System.out.println(datas[0]+datas[1]+datas[2]+datas[3]);
@@ -132,9 +132,9 @@ public class Login {
                     	else
                     		out.println("L6-"+Character.getNumericValue(datas[1].charAt(3))+".png");
                     }
-                    else if(datas[0].equalsIgnoreCase("join"))//È¸¿ø°¡ÀÔ
+                    else if(datas[0].equalsIgnoreCase("join"))//íšŒì›ê°€ì…
                     {
-                        //µğºñ¿¡ datas[1][2][3]À» Áı¾î³Ö°í chapter¿¡´Â 0À» ³ÖÀ½.
+                        //ë””ë¹„ì— datas[1][2][3]ì„ ì§‘ì–´ë„£ê³  chapterì—ëŠ” 0ì„ ë„£ìŒ.
                         try {
                          String select = "select * from member where id = " + "\""+datas[1]+"\"";
                          Statement check = null;
@@ -169,11 +169,11 @@ public class Login {
                          e.printStackTrace();
                       }
                      }
-                    else if(datas[0].equalsIgnoreCase("done"))//Ã©ÅÍ ¿Ï·á ¸Ş¼¼Áö
+                    else if(datas[0].equalsIgnoreCase("done"))//ì±•í„° ì™„ë£Œ ë©”ì„¸ì§€
                     {
-                       //datas[1]·Î µğºñ¿¡¼­ ¸ÅÄªµÇ´Â °÷¿¡ chapterºÎºĞ¿¡ datas[4]¸¦ Ãß°¡
+                       //datas[1]ë¡œ ë””ë¹„ì—ì„œ ë§¤ì¹­ë˜ëŠ” ê³³ì— chapterë¶€ë¶„ì— datas[4]ë¥¼ ì¶”ê°€
                        try {
-                          //datas[4]¸¦ ±×´ë·Î ÀÔ·ÂÇÏ±â ¶§¹®¿¡ Å¬¶óÀÌ¾ğÆ®Ãø¿¡¼­ Ã³À½¿¡ ¹ŞÀº chapter ½ºÆ®¸µ¿¡ ±×´ë·Î ¿Ï·áÇÑ Ã©ÅÍ¸¦ ÀÌ¾îºÙ¿©¼­ ³Ñ°ÜÁà¾ßÇÔ
+                          //datas[4]ë¥¼ ê·¸ëŒ€ë¡œ ì…ë ¥í•˜ê¸° ë•Œë¬¸ì— í´ë¼ì´ì–¸íŠ¸ì¸¡ì—ì„œ ì²˜ìŒì— ë°›ì€ chapter ìŠ¤íŠ¸ë§ì— ê·¸ëŒ€ë¡œ ì™„ë£Œí•œ ì±•í„°ë¥¼ ì´ì–´ë¶™ì—¬ì„œ ë„˜ê²¨ì¤˜ì•¼í•¨
                           String select = "select chapter from member where id = \"" + datas[1] + "\"";
                           Statement stmt = con.createStatement();
                           ResultSet rs = stmt.executeQuery(select);
