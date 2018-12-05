@@ -1,110 +1,111 @@
 package test;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 
+/* Subclass for Client to process new user's join
+ * makes a new frame to get user's information
+ * merge all information into a string, and store it into 'totalMessage'
+ * */
 public class Join extends JFrame  {
    int check = 0;
-   JLabel lblNewLabel = new JLabel("이름", JLabel.CENTER);
-   JLabel lblNewLabel_2 = new JLabel("아이디", JLabel.CENTER);
-   JLabel lblNewLabel_3 = new JLabel("비밀번호", JLabel.CENTER);
-   JButton joinbtn = new JButton("\uD655\uC778");
-   JPasswordField passwordText = new JPasswordField();
+   
+   //labels to clarify each text fields
+   JLabel name = new JLabel("이름", JLabel.CENTER);
+   JLabel id = new JLabel("아이디", JLabel.CENTER);
+   JLabel pw = new JLabel("비밀번호", JLabel.CENTER);
+   
+   //text fields to get user's information
+   JPasswordField pwText = new JPasswordField();
    JTextField idText = new JTextField();
    JTextField nameText = new JTextField();
+
+   //to submit user's information
+   JButton submit = new JButton("\uD655\uC778");
+
+   //color to set each button's background color 
    Color green = new Color(168, 209, 141);
-   static JLabel errorText = new JLabel("");
-   BufferedReader in;
-   PrintWriter out;
-   Socket socket;
+
+   //to make user's informations into one string variable
    static String totalMessage ="";
+
    public static String getMessage() {
 	   return totalMessage;
    }
    public static void initMessage() {
 	   totalMessage = "";
    }
+
    public Join() {
       getContentPane().setBackground(Color.WHITE);
-         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         Container con = getContentPane();
-         getContentPane().setLayout(null);
-         errorText.setFont(new Font("야놀자 야체 R", Font.PLAIN, 18));
-         errorText.setBounds(78, 200, 125, 18);
-         con.add(errorText);
-         lblNewLabel.setBounds(33, 44, 68, 15);
-         lblNewLabel.setFont(new Font("야놀자 야체 B", Font.BOLD, 18));
-         con.add(lblNewLabel);
-         lblNewLabel_2.setBounds(27, 90, 68, 15);
-         lblNewLabel_2.setFont(new Font("야놀자 야체 B", Font.BOLD, 18));
-         con.add(lblNewLabel_2);
-         lblNewLabel_3.setBounds(22, 138, 68, 15);
-         lblNewLabel_3.setFont(new Font("야놀자 야체 B", Font.BOLD, 18));
-         con.add(lblNewLabel_3);
-         nameText.setBounds(87, 42, 116, 21);
-         nameText.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, green, green));
-         nameText.setColumns(10);
-         con.add(nameText);
-         idText.setBounds(87, 88, 116, 21);
-
-         idText.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, green, green));
-         idText.setColumns(10);
-         con.add(idText);
-         passwordText.setBounds(87, 134, 116, 21);
-       
-         passwordText.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, green, green));
-         con.add(passwordText);
-         joinbtn.setBounds(86, 165, 97, 23);
-     
-
-         joinbtn.setForeground(Color.WHITE);
-         joinbtn.setFont(new Font("야놀자 야체 B", Font.BOLD, 18));
-         joinbtn.setBackground(green);
-         joinbtn.setBorderPainted(false);
-         con.add(joinbtn);
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      Container con = getContentPane();
+      getContentPane().setLayout(null);
+      
+      //to set size of each label
+      name.setBounds(33, 44, 68, 15);
+      name.setFont(new Font("야놀자 야체 B", Font.BOLD, 18));
+      con.add(name);
          
-         setTitle("회원가입");
-         setSize(269, 267);
-         setResizable(false);
-         setLocation(800, 350);
-         setVisible(true);
+      id.setBounds(27, 90, 68, 15);
+      id.setFont(new Font("야놀자 야체 B", Font.BOLD, 18));
+      con.add(id);
          
-         joinbtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-               String str = "join/";
-               String pw = "";
-	           char[] s_pw = passwordText.getPassword();
-	           for (char cha : s_pw) {
-	              Character.toString(cha);
+      pw.setBounds(22, 138, 68, 15);
+      pw.setFont(new Font("야놀자 야체 B", Font.BOLD, 18));
+      con.add(pw);
+
+      //to set size of each text fields
+      nameText.setBounds(87, 42, 116, 21);
+      nameText.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, green, green));
+      nameText.setColumns(10);
+      con.add(nameText);
+         
+      idText.setBounds(87, 88, 116, 21);
+      idText.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, green, green));
+      idText.setColumns(10);
+      con.add(idText);
+
+      pwText.setBounds(87, 134, 116, 21); 
+      pwText.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, green, green));
+      con.add(pwText);
+      
+      //to set size, color and font of submit button 
+      submit.setBounds(86, 165, 97, 23);
+      submit.setForeground(Color.WHITE);
+      submit.setFont(new Font("야놀자 야체 B", Font.BOLD, 18));
+      submit.setBackground(green);
+      submit.setBorderPainted(false);
+      con.add(submit);
+      //to merge all information into a string with header 'join/' and store it into totalMessage when user clicks button
+      submit.addActionListener(new ActionListener() {
+    	  public void actionPerformed(ActionEvent e) {
+    		  String header = "join/";
+              String pw = "";
+	          char[] s_pw = pwText.getPassword();
+	          for (char cha : s_pw) {
+	        	  Character.toString(cha);
 	              pw += (pw.equals("")) ? "" + cha + "" : "" + cha + "";
-	           }
-	           totalMessage = str + idText.getText() + "/" + pw + "/" + nameText.getText().toString()+"/000000";
-	           dispose();
-	           con.setVisible(false);
-            }
-         });
+	          }
+	          totalMessage = header + idText.getText() + "/" + pw + "/" + nameText.getText().toString()+"/000000";
+	          dispose();
+	          con.setVisible(false);
+    	  }
+    	  });
+
+      //to set size of frame and make whole contents visible
+      setTitle("회원가입");
+      setSize(269, 267);
+      setResizable(false);
+      setLocation(800, 350);
+      setVisible(true);
    }
 }
