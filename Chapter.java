@@ -1,4 +1,4 @@
-package pack;
+package test;
 
 import java.awt.*;
 import javax.swing.*;
@@ -6,6 +6,8 @@ import java.awt.event.*;
 import java.io.*;
 import javax.swing.border.*;
 import java.net.Socket;
+import java.net.UnknownHostException;
+
 public class Chapter extends JFrame {
 
 	public static void main(String[] args) {
@@ -20,136 +22,281 @@ public class Chapter extends JFrame {
 			}
 		});
 	}
+
 	BufferedReader in;
 	PrintWriter out;
+	static int lecnum = 0;
+	static String lecture6 = "";
+	static String lecture5 = "";
+	static String lecture4 = "";
+	static String lecture3 = "";
+	static String lecture2 = "";
+	static String lecture1 = "";
+
+	static String getLecture(int i) {
+		switch (i) {
+		case 1:
+			return lecture1;
+		case 2:
+			return lecture2;
+		case 3:
+			return lecture3;
+		case 4:
+			return lecture4;
+		case 5:
+			return lecture5;
+		case 6:
+			return lecture6;
+		default:
+			return "MhongJae";
+		}
+	}
+
+	static int getLecnum() {
+		return lecnum;
+	}
+
 	public Chapter() {
+
+		Socket socket = null;
+		try {
+			socket = new Socket("192.168.43.22", 9001);
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		try {
+			out = new PrintWriter(socket.getOutputStream(), true);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		getContentPane().setBackground(Color.WHITE);
-		
-		
+
 		setTitle("Chapter");
 		setSize(1100, 700);
 		setResizable(false);
 		setLocation(0, 0);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
-		
-		JButton button = new JButton("Chapter 5");
-		button.setForeground(Color.WHITE);
-		button.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button.setBorderPainted(false);
-		button.setBackground(new Color(168, 209, 141));
-		button.setBounds(452, 380, 153, 34);
-		getContentPane().add(button);
-		
-		JButton button_1 = new JButton("Chapter 1");
-		button_1.addActionListener(new ActionListener() {
+
+		JButton Chap5 = new JButton("Lecture");
+		Chap5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Lecture lec1 = new Lecture();
+
+				out.println("Lecture5/L5-0.png");
+				try {
+					lecture5 = in.readLine();
+					lecnum = Character.getNumericValue(lecture5.charAt(1));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				Lecture lec5 = new Lecture();
 				dispose();
 			}
 		});
-		button_1.setForeground(Color.WHITE);
-		button_1.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_1.setBorderPainted(false);
-		button_1.setBackground(new Color(168, 209, 141));
-		button_1.setBounds(452, 204, 153, 34);
-		getContentPane().add(button_1);
+
+		JButton Chap1 = new JButton("Lecture");
+		Chap1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				out.println("Lecture1/L1-0.png");
+				try {
+					lecture1 = in.readLine();
+					System.out.println(lecture1);
+					lecnum = Character.getNumericValue(lecture1.charAt(1));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				Lecture lec1 = new Lecture();
+				System.out.println(lecture1);
+				dispose();
+			}
+		});
+		Chap1.setForeground(Color.WHITE);
+		Chap1.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Chap1.setBorderPainted(false);
+		Chap1.setBackground(new Color(168, 209, 141));
+		Chap1.setBounds(471, 275, 153, 34);
+		getContentPane().add(Chap1);
+
+		JButton Chap2 = new JButton("Lecture");
+		Chap2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				out.println("Lecture2/L2-0.png");
+				try {
+					lecture2 = in.readLine();
+					lecnum = Character.getNumericValue(lecture2.charAt(1));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				Lecture lec2 = new Lecture();
+				dispose();
+			}
+		});
+
+		JButton Quiz1 = new JButton("QUIZ");
+		Quiz1.setForeground(Color.WHITE);
+		Quiz1.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Quiz1.setBorderPainted(false);
+		Quiz1.setBackground(new Color(168, 209, 141));
+		Quiz1.setBounds(631, 275, 78, 34);
+		getContentPane().add(Quiz1);
+		Chap2.setForeground(Color.WHITE);
+		Chap2.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Chap2.setBorderPainted(false);
+		Chap2.setBackground(new Color(168, 209, 141));
+		Chap2.setBounds(471, 319, 153, 34);
+		getContentPane().add(Chap2);
+
+		JButton Chap3 = new JButton("Lecture");
+		Chap3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				out.println("Lecture3/L3-0.png");
+
+				try {
+					lecture3 = in.readLine();
+					lecnum = Character.getNumericValue(lecture3.charAt(1));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				Lecture lec3 = new Lecture();
+				dispose();
+			}
+		});
+
+		JButton Quiz2 = new JButton("QUIZ");
+		Quiz2.setForeground(Color.WHITE);
+		Quiz2.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Quiz2.setBorderPainted(false);
+		Quiz2.setBackground(new Color(168, 209, 141));
+		Quiz2.setBounds(631, 319, 78, 34);
+		getContentPane().add(Quiz2);
+		Chap3.setForeground(Color.WHITE);
+		Chap3.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Chap3.setBorderPainted(false);
+		Chap3.setBackground(new Color(168, 209, 141));
+		Chap3.setBounds(471, 363, 153, 34);
+		getContentPane().add(Chap3);
+
+		JButton Quiz3 = new JButton("QUIZ");
+		Quiz3.setForeground(Color.WHITE);
+		Quiz3.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Quiz3.setBorderPainted(false);
+		Quiz3.setBackground(new Color(168, 209, 141));
+		Quiz3.setBounds(631, 363, 78, 34);
+		getContentPane().add(Quiz3);
+
+		JButton Chap4 = new JButton("Lecture");
+		Chap4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				out.println("Lecture4/L4-0.png");
+				try {
+					lecture4 = in.readLine();
+					lecnum = Character.getNumericValue(lecture4.charAt(1));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				Lecture lec4 = new Lecture();
+				dispose();
+			}
+		});
+		Chap4.setForeground(Color.WHITE);
+		Chap4.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Chap4.setBorderPainted(false);
+		Chap4.setBackground(new Color(168, 209, 141));
+		Chap4.setBounds(471, 407, 153, 34);
+		getContentPane().add(Chap4);
+
+		JButton Quiz4 = new JButton("QUIZ");
+
+		Quiz4.setForeground(Color.WHITE);
+		Quiz4.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Quiz4.setBorderPainted(false);
+		Quiz4.setBackground(new Color(168, 209, 141));
+		Quiz4.setBounds(631, 407, 78, 34);
+		getContentPane().add(Quiz4);
+		Chap5.setForeground(Color.WHITE);
+		Chap5.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Chap5.setBorderPainted(false);
+		Chap5.setBackground(new Color(168, 209, 141));
+		Chap5.setBounds(471, 451, 153, 34);
+		getContentPane().add(Chap5);
+
+		JButton Quiz5 = new JButton("QUIZ");
+		Quiz5.setForeground(Color.WHITE);
+		Quiz5.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Quiz5.setBorderPainted(false);
+		Quiz5.setBackground(new Color(168, 209, 141));
+		Quiz5.setBounds(631, 451, 78, 34);
+		getContentPane().add(Quiz5);
+
+		JButton Chap6 = new JButton("Lecture");
+		Chap6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				out.println("Lecture6/L6-0.png");
+				try {
+					lecture6 = in.readLine();
+					lecnum = Character.getNumericValue(lecture6.charAt(1));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				Lecture lec6 = new Lecture();
+				dispose();
+			}
+		});
+		Chap6.setForeground(Color.WHITE);
+		Chap6.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Chap6.setBorderPainted(false);
+		Chap6.setBackground(new Color(168, 209, 141));
+		Chap6.setBounds(471, 495, 153, 34);
+		getContentPane().add(Chap6);
+
+		JButton Quiz6 = new JButton("QUIZ");
+		Quiz6.setForeground(Color.WHITE);
+		Quiz6.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
+		Quiz6.setBorderPainted(false);
+		Quiz6.setBackground(new Color(168, 209, 141));
+		Quiz6.setBounds(631, 495, 78, 34);
+		getContentPane().add(Quiz6);
 		
-		JButton button_2 = new JButton("QUIZ");
-		button_2.setForeground(Color.WHITE);
-		button_2.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_2.setBorderPainted(false);
-		button_2.setBackground(new Color(168, 209, 141));
-		button_2.setBounds(612, 204, 78, 34);
-		getContentPane().add(button_2);
+		JLabel lblChapter = new JLabel("Chapter 1 :");
+		lblChapter.setFont(new Font("具愁磊 具眉 R", Font.PLAIN, 30));
+		lblChapter.setBounds(321, 275, 128, 34);
+		getContentPane().add(lblChapter);
 		
-		JButton button_3 = new JButton("QUIZ");
-		button_3.setForeground(Color.WHITE);
-		button_3.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_3.setBorderPainted(false);
-		button_3.setBackground(new Color(168, 209, 141));
-		button_3.setBounds(612, 248, 78, 34);
-		getContentPane().add(button_3);
+		JLabel lblChapter_1 = new JLabel("Chapter 2 :");
+		lblChapter_1.setFont(new Font("具愁磊 具眉 R", Font.PLAIN, 30));
+		lblChapter_1.setBounds(321, 321, 138, 24);
+		getContentPane().add(lblChapter_1);
 		
-		JButton button_4 = new JButton("Chapter 2");
-		button_4.setForeground(Color.WHITE);
-		button_4.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_4.setBorderPainted(false);
-		button_4.setBackground(new Color(168, 209, 141));
-		button_4.setBounds(452, 248, 153, 34);
-		getContentPane().add(button_4);
+		JLabel lblChapter_2 = new JLabel("Chapter 3 :");
+		lblChapter_2.setFont(new Font("具愁磊 具眉 R", Font.PLAIN, 30));
+		lblChapter_2.setBounds(321, 365, 138, 24);
+		getContentPane().add(lblChapter_2);
 		
-		JButton button_5 = new JButton("Chapter 3");
-		button_5.setForeground(Color.WHITE);
-		button_5.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_5.setBorderPainted(false);
-		button_5.setBackground(new Color(168, 209, 141));
-		button_5.setBounds(452, 292, 153, 34);
-		getContentPane().add(button_5);
+		JLabel lblChapter_3 = new JLabel("Chapter 4 :");
+		lblChapter_3.setFont(new Font("具愁磊 具眉 R", Font.PLAIN, 30));
+		lblChapter_3.setBounds(321, 409, 138, 25);
+		getContentPane().add(lblChapter_3);
 		
-		JButton button_6 = new JButton("QUIZ");
-		button_6.setForeground(Color.WHITE);
-		button_6.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_6.setBorderPainted(false);
-		button_6.setBackground(new Color(168, 209, 141));
-		button_6.setBounds(612, 292, 78, 34);
-		getContentPane().add(button_6);
+		JLabel lblChapter_4 = new JLabel("Chapter 5 :");
+		lblChapter_4.setFont(new Font("具愁磊 具眉 R", Font.PLAIN, 30));
+		lblChapter_4.setBounds(321, 453, 151, 25);
+		getContentPane().add(lblChapter_4);
 		
-		JButton button_7 = new JButton("QUIZ");
-		button_7.setForeground(Color.WHITE);
-		button_7.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_7.setBorderPainted(false);
-		button_7.setBackground(new Color(168, 209, 141));
-		button_7.setBounds(612, 336, 78, 34);
-		getContentPane().add(button_7);
-		
-		JButton button_8 = new JButton("Chapter 4");
-		button_8.setForeground(Color.WHITE);
-		button_8.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_8.setBorderPainted(false);
-		button_8.setBackground(new Color(168, 209, 141));
-		button_8.setBounds(452, 336, 153, 34);
-		getContentPane().add(button_8);
-		
-		JButton button_9 = new JButton("QUIZ");
-		button_9.setForeground(Color.WHITE);
-		button_9.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_9.setBorderPainted(false);
-		button_9.setBackground(new Color(168, 209, 141));
-		button_9.setBounds(612, 380, 78, 34);
-		getContentPane().add(button_9);
-		
-		JButton button_10 = new JButton("QUIZ");
-		button_10.setForeground(Color.WHITE);
-		button_10.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_10.setBorderPainted(false);
-		button_10.setBackground(new Color(168, 209, 141));
-		button_10.setBounds(612, 424, 78, 34);
-		getContentPane().add(button_10);
-		
-		JButton button_11 = new JButton("Chapter 6");
-		button_11.setForeground(Color.WHITE);
-		button_11.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_11.setBorderPainted(false);
-		button_11.setBackground(new Color(168, 209, 141));
-		button_11.setBounds(452, 424, 153, 34);
-		getContentPane().add(button_11);
-		
-		JButton button_12 = new JButton("Chapter 7");
-		button_12.setForeground(Color.WHITE);
-		button_12.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_12.setBorderPainted(false);
-		button_12.setBackground(new Color(168, 209, 141));
-		button_12.setBounds(452, 468, 153, 34);
-		getContentPane().add(button_12);
-		
-		JButton button_13 = new JButton("QUIZ");
-		button_13.setForeground(Color.WHITE);
-		button_13.setFont(new Font("具愁磊 具眉 R", Font.BOLD, 20));
-		button_13.setBorderPainted(false);
-		button_13.setBackground(new Color(168, 209, 141));
-		button_13.setBounds(612, 468, 78, 34);
-		getContentPane().add(button_13);
+		JLabel lblChapter_5 = new JLabel("Chapter 6 :");
+		lblChapter_5.setFont(new Font("具愁磊 具眉 R", Font.PLAIN, 30));
+		lblChapter_5.setBounds(321, 497, 138, 25);
+		getContentPane().add(lblChapter_5);
 		Color green = new Color(168, 209, 141);
 		Font f2 = new Font("具愁磊 具眉 Regular", Font.BOLD, 20);
 
