@@ -1,4 +1,4 @@
-package test;
+package test;;
 
 import java.awt.*;
 import javax.swing.*;
@@ -16,16 +16,16 @@ public class kpo extends JFrame {
       String fromLO = null;
       String fromSV = null;
       int loginsus = 0;
-      Font f2 = new Font("¾ß³îÀÚ ¾ßÃ¼ Regular", Font.BOLD, 20);
+      Font f2 = new Font("ì•¼ë†€ì ì•¼ì²´ Regular", Font.BOLD, 20);
       Color green = new Color(168, 209, 141);
-      Font f3 = new Font("¾ß³îÀÚ ¾ßÃ¼ Regular", Font.BOLD, 17);
-      Font f4 = new Font("¾ß³îÀÚ ¾ßÃ¼ Regular", Font.BOLD, 20);
+      Font f3 = new Font("ì•¼ë†€ì ì•¼ì²´ Regular", Font.BOLD, 17);
+      Font f4 = new Font("ì•¼ë†€ì ì•¼ì²´ Regular", Font.BOLD, 20);
       JTextField userText = new JTextField(20);
       JPasswordField passText = new JPasswordField(20);
-      JLabel userLabel = new JLabel("¾ÆÀÌµğ:", JLabel.RIGHT);
-      JLabel passLabel = new JLabel("ºñ¹Ğ¹øÈ£:", JLabel.RIGHT);
-      JButton join = new JButton("È¸¿ø°¡ÀÔ");
-      JButton btnLogin = new JButton("·Î±×ÀÎ");
+      JLabel userLabel = new JLabel("ì•„ì´ë””:", JLabel.RIGHT);
+      JLabel passLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸:", JLabel.RIGHT);
+      JButton join = new JButton("íšŒì›ê°€ì…");
+      JButton btnLogin = new JButton("ë¡œê·¸ì¸");
       private final JLabel lblNewLabel = new JLabel("EDU - C");
 
    public kpo() {
@@ -63,7 +63,7 @@ public class kpo extends JFrame {
 	   btnLogin.setBackground(green);
 	   btnLogin.setForeground(Color.white);
 	   con.add(btnLogin);
-	   lblNewLabel.setFont(new Font("¾ß³îÀÚ ¾ßÃ¼ R", Font.PLAIN, 90));
+	   lblNewLabel.setFont(new Font("ì•¼ë†€ì ì•¼ì²´ R", Font.PLAIN, 90));
 	   lblNewLabel.setBounds(390, 195, 273, 87);
 	   
 	   getContentPane().add(lblNewLabel);
