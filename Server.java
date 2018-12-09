@@ -1,4 +1,4 @@
-package test;
+package EDU_C;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,39 +12,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/*
- * Main class for server
- * to process user's login/join/progress update by connecting database
- * give success message and current progress to client when login succeed
- * give welcome message to client when join succeed
- * give error message to client when login/join failed
- * */
 public class Server {
 
-	private static final int PORT = 9001;
-
-	// to connect with database
+	private static final int PORT = 9001; // set port-number
 	static Connection con = null;
-
-	// to split user's message
-	static String[] datas = new String[6];
+	static String[] datas = new String[6]; // the string value to store client's query
+	static String name;
+	static String answers = "3/5/%c/5/2/++num/3/3/input%3/5/5/4/2/1/float/3/2/hello world/"; // quiz's answer values
+	static String[] answer = answers.split("/");
 
 	public static void main(String[] args) throws Exception {
-
-		// make a socket to connect with client
-		ServerSocket listener = new ServerSocket(PORT);
-
-		// make a connection with database by using DB class's method
+		ServerSocket listener = new ServerSocket(PORT); // make a socket to communicate with client
 		try {
 			con = DB.getConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// wait for client and process client's order
 		try {
 			while (true) {
-				new Handler(listener.accept()).start();
+				new Handler(listener.accept()).start(); // starts the threads
 			}
 		} finally {
 			listener.close(); // ends the threads
@@ -52,180 +38,209 @@ public class Server {
 	}
 
 	private static class Handler extends Thread {
-
-		// socket for connection with client
+		// declaration of variables
 		private Socket socket;
-
-		// to hear/to talk to client
 		private BufferedReader in;
 		private PrintWriter out;
 
+		// we set threads to use
 		public Handler(Socket socket) {
 			this.socket = socket;
 		}
 
-		/*
-		 * runs operations(processing user's join&login)
-		 */
 		public void run() {
 			try {
-				// talk to/hear client
-				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				out = new PrintWriter(socket.getOutputStream(), true);
 
-				// keep this work
+				in = new BufferedReader(new InputStreamReader(socket.getInputStream())); // this function allows to
+																							// listen what server has
+																							// sent
+				out = new PrintWriter(socket.getOutputStream(), true); // this function allows to send commands to
+																		// clients
 				while (true) {
-
-					// store message from client into input
-					// message is formed with header/id/pw/name/chapter
-					String input = in.readLine().toString();
-
-					// split input message with '/' token and store it into datas array
-					// datas[0] = header
-					// datas[1] = id
-					// datas[2] = pw
-					// datas[3] = name
-					// datas[4] = chapter
+					String input = in.readLine().toString(); // we read sentences from text box
 					datas = input.split("/");
-
-					// if header is login
-					if (datas[0].equalsIgnoreCase("login")) {
-						/*
-						 * check is there same id and pw in database store current progress chapter data
-						 * into chapter variable and give it to client if there is member in database
-						 * give error message to client if there is no member in database chapter data
-						 * is formed with 6 numbers. 0 for not studied one, 1 for studied one
-						 */
+					if (datas[0].equalsIgnoreCase("login"))// case of login
+					{
 						try {
-							// execute query that checks is member in database and store result tuple into
-							// rs
-							String select = "select chapter from member where id = \"" + datas[1] + "\" and pw = \""
-									+ datas[2] + "\"";
-							Statement stmt = (Statement) con.createStatement();
-							ResultSet rs = stmt.executeQuery(select);
+							String select = "select name, chapter from member where id = \"" + datas[1]
+									+ "\" and pw = \"" + datas[2] + "\""; // make a SQL query that finds name and chapter information which ID and passwords matches
+							
+							Statement stmt = (Statement) con.createStatement(); // execute SQL query
+							ResultSet rs = stmt.executeQuery(select); // get result of SQL query
+							boolean exists = false;
+							
+							String chapter = "000000"; // default chapter value
+							while (rs.next()) { // if resultset exists 
+								name = rs.getString(1);
+								chapter = rs.getString(2);
+								if (rs.wasNull()) // 
+									chapter = "000000";
 
-							// to store chapter data that is in database
-							String chapter = "------";
-							while (rs.next()) {
-								chapter = rs.getString(1);
-								if (rs.wasNull())
-									chapter = "------";
-								// tell client that login succeed if there is member information in database
-								// that matches with input
-								if (chapter != "------") {
-									out.println("success/" + chapter);
+								if (chapter != "000000") { // if the chapter value is not 000000 which tells it's not first time to visit EDU_C
+									exists = true;
 									break;
 								}
 							}
-							// tell client that input is invalid if there's no member in database
-							if (chapter == "------")
-								out.println("Invalid id or pw");
 
-							DB.close(stmt);
-							DB.close(rs);
+							if (exists) { //if there's right information about login information
+								out.println("success/" + name + "/" + chapter); // tell to the client about login user's name and chpater value
+
+							} else { // if the ID or password does not matches
+								out.println("Invalid id or pw"); // tell to the client that there's no such ID or matching password
+							}
+							DB.close(stmt); 
+							DB.close(rs);// close the SQL
 
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}
+					} else if (datas[0].equalsIgnoreCase("Lecture1")) { // case of first lecture
+						if (Character.getNumericValue(datas[1].charAt(3)) < 9)
+							out.println("L1-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png"); // tell to the client about next page's information until it's not the last page
+						else
+							out.println("L1-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // if it is last page just send current page's information
+					} else if (datas[0].equalsIgnoreCase("Lecture2")) { // case of second lecture
+						if (Character.getNumericValue(datas[1].charAt(3)) < 9)
+							out.println("L2-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("L2-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // same as lecture1
+					} else if (datas[0].equalsIgnoreCase("Lecture3")) {// case of third lecture
+						if (Character.getNumericValue(datas[1].charAt(3)) == 9)
+							out.println("L3-10.png");
+						else if (Character.getNumericValue(datas[1].charAt(4)) == 0)
+							out.println("L3-11.png");
+						else if (Character.getNumericValue(datas[1].charAt(3)) < 9)
+							out.println("L3-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("L3-11.png"); // same as 1 & 2 but it's little bit different with the page's count
+					} else if (datas[0].equalsIgnoreCase("Lecture4")) {
+						if (Character.getNumericValue(datas[1].charAt(3)) < 9)
+							out.println("L4-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("L4-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // same as 1 & 2 & 3
+					} else if (datas[0].equalsIgnoreCase("Lecture5")) {
+						if (Character.getNumericValue(datas[1].charAt(3)) == 9)
+							out.println("L5-10.png");
+						else if (Character.getNumericValue(datas[1].charAt(4)) == 0)
+							out.println("L5-10.png");
+						else if (Character.getNumericValue(datas[1].charAt(3)) != 9)
+							out.println("L5-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("L5-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // same as 1 & 2 & 3 & 4
+					} else if (datas[0].equalsIgnoreCase("Lecture6")) {
+						if (Character.getNumericValue(datas[1].charAt(3)) < 9)
+							out.println("L6-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("L6-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // same as 1 & 2& 3 & 4
+					} else if (datas[0].equalsIgnoreCase("Quiz1")) { // case of first quiz
+
+						if (Character.getNumericValue(datas[1].charAt(3)) < 3)
+							out.println("Q1-" + Character.getNumericValue(datas[1].charAt(3) + 1) + ".png"); // send next quiz's page
+						else
+							out.println("Q1-" + Character.getNumericValue(datas[1].charAt(3)) + ".png");
+					} else if (datas[0].equalsIgnoreCase("Quiz2")) {//case of second quiz
+						if (Character.getNumericValue(datas[1].charAt(3)) < 3)
+							out.println("Q2-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("Q2-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // same as quiz1
+					} else if (datas[0].equalsIgnoreCase("Quiz3")) {
+						if (Character.getNumericValue(datas[1].charAt(3)) < 3)
+							out.println("Q3-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("Q3-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // same as 1 & 2
+					} else if (datas[0].equalsIgnoreCase("Quiz4")) {
+						if (Character.getNumericValue(datas[1].charAt(3)) < 3)
+							out.println("Q4-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("Q4-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // same as 1 & 2 & 3
+					} else if (datas[0].equalsIgnoreCase("Quiz5")) {
+						if (Character.getNumericValue(datas[1].charAt(3)) < 3)
+							out.println("Q5-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("Q5-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // same as 1 & 2 & 3 & 4
+					} else if (datas[0].equalsIgnoreCase("Quiz6")) {
+						if (Character.getNumericValue(datas[1].charAt(3)) < 3)
+							out.println("Q6-" + (Character.getNumericValue(datas[1].charAt(3)) + 1) + ".png");
+						else
+							out.println("Q6-" + Character.getNumericValue(datas[1].charAt(3)) + ".png"); // same as 1 & 2 & 3 & 4 & 5
 					}
-
-					// if header is join
-					else if (datas[0].equalsIgnoreCase("join")) {
-						/*
-						 * check is there same id in database store user's input data into database if
-						 * there is no member in database give error message to client if there is
-						 * member who has same id in database already
-						 */
+					else if (datas[0].equalsIgnoreCase("Answer")) { // case of checks quiz's answer
+						if (datas[3].equalsIgnoreCase(
+								answer[(Integer.parseInt(datas[1]) - 1) * 3 + Integer.parseInt(datas[2])])) // if it matches with server's answer information
+							out.println("answer"); // send clients that answer is right
+						else
+							out.println("wrong"); // else send clients that answer is wrong
+					} else if (datas[0].equalsIgnoreCase("join"))// case of sign up
+					{
 						try {
-							// execute query that checks is member who has same id in database and store result tuple into rs
-							String select = "select * from member where id = " + "\"" + datas[1] + "\"";
-							Statement check = (Statement) con.createStatement();
-							ResultSet rs = (ResultSet) check.executeQuery(select);
-
-							String id = rs.getString(1);
-							while (rs.next()) {
+							String select = "select * from member where id = " + "\"" + datas[1] + "\""; // make a SQL query that is there same ID
+							Statement check = null;
+							check = (Statement) con.createStatement(); // executes SQL query
+							ResultSet rs = (ResultSet) check.executeQuery(select); // get the result
+							boolean exists = false;
+							while (rs.next()) { // if there's result about SQL query
+								String name = rs.getString(1);
 								if (rs.wasNull())
-									id = "----";
-								// tell client that there is same id if there is same id
-								if (id != "----") {
-									out.println("need another ID");
+									name = "null";
+								if (name != "null") { // if the name value is not null check that there's already exists same ID
+									exists = true; 
 									break;
 								}
 							}
-							// if there is no same id in database
-							if (id == "----") {
-								// execute query that inserts new member in database and tell client welcome
+							if (exists) { // if ID is same
+								out.println("another"); // send to client that need another ID
+							} else { // else
 								String insert = "insert into member values(\"" + datas[1] + "\",\"" + datas[2] + "\",\""
 										+ datas[3] + "\",\"000000\")";
 								Statement stmt = con.createStatement();
-								stmt.executeUpdate(insert);
+								stmt.executeUpdate(insert); // update at Database
 								DB.close(stmt);
-								out.println("Welcome");
+								out.println("Welcome"); // send to client that welcome
 							}
-
 							DB.close(check);
 							DB.close(rs);
-
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}
-					}
-
-					/* if header is done(user finished to study lecture)
-					 * chapter information that client passed formed like 1 when user finished
-					 * chapter 1, 2 when user finished chapter 2
-					 * */
-					else if (datas[0].equalsIgnoreCase("done"))
+					} else if (datas[0].equalsIgnoreCase("done"))//case of complete of chapter
 					{
-
-						/*
-						 * search for user in database and update that tuple
-						 * */
 						try {
-							// execute query that gets user's current chapter progress and store it into chapter variable
 							String select = "select chapter from member where id = \"" + datas[1] + "\"";
 							Statement stmt = con.createStatement();
-							ResultSet rs = stmt.executeQuery(select);
+							ResultSet rs = stmt.executeQuery(select); // get chapter information from database
 							String chapter = "";
 							while (rs.next()) {
 								chapter = rs.getString(1);
 							}
 
-							// change bit to 1 which means the chapter that user finished
 							char[] changed = new char[6];
-							for (int i = 0; i < 6; i++) {
+							for (int i = 0; i < 6; i++) { // change the Chapter information
 								if (i == Integer.parseInt(datas[4]) - 1)
 									changed[i] = '1';
 								else
 									changed[i] = chapter.charAt(i);
 							}
 
-							// merge changed character array into a string
 							String change = "";
 							for (int i = 0; i < 6; i++) {
 								change += Character.toString(changed[i]);
 							}
 
-							// execute query that updates user's current progress 
 							String update = "update member set chapter = \"" + change + "\" where id = \"" + datas[1]
 									+ "\"";
-							stmt = con.createStatement();
-							stmt.executeUpdate(update);
-							
-							DB.close(stmt);
+							Statement stmt2 = con.createStatement();
+							stmt2.executeUpdate(update); // update database with changed chapter information
+							DB.close(stmt2);
 							DB.close(rs);
-
+							DB.close(stmt);
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}
 					}
 				}
 			} catch (IOException e) {
-				System.out.println(e);
-			} finally {
-				try {
-					//close user's socket when user closed 
-					socket.close();
+			} finally { 
+				try { socket.close();
 				} catch (IOException e) {
 				}
 			}
